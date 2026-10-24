@@ -43,60 +43,6 @@ function Get-ToolboxScripts {
         Sort-Object FullName)
 }
 
-function Show-ScriptHelp([System.IO.FileInfo]$Target) {
-    try {
-        $content = Get-Content -LiteralPath $Target.FullName -Raw -ErrorAction SilentlyContinue
-
-        $synopsis = $null
-        if ($content -match '(?ms)\.SYNOPSIS\s*\r?\n\s*(.*?)(?=\r?\n\s*\.[A-Z]+|\r?\n\s*#>)') {
-            $synopsis = ($Matches[1] -split '\r?\n' | ForEach-Object { $_.Trim() } | Where-Object { $_ }) -join ' '
-        }
-
-        $examples = @()
-        if ($content -match '(?ms)\.EXAMPLES?\s*\r?\n\s*(.*?)(?=\r?\n\s*\.[A-Z]+|\r?\n\s*#>)') {
-            $examples = @($Matches[1] -split '\r?\n' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
-        }
-
-        $ast = [System.Management.Automation.Language.Parser]::ParseFile($Target.FullName, [ref]$null, [ref]$null)
-        $paramInfo = @()
-        if ($ast.ParamBlock -and $ast.ParamBlock.Parameters -and $ast.ParamBlock.Parameters.Count -gt 0) {
-            foreach ($p in $ast.ParamBlock.Parameters) {
-                $pName = $p.Name.VariablePath.UserPath
-                $pType = if ($p.StaticType) { $p.StaticType.Name } else { 'Object' }
-                $validValues = @()
-                foreach ($attr in $p.Attributes) {
-                    if ($attr.TypeName.Name -like '*ValidateSet*') {
-                        $validValues = @($attr.PositionalArguments | ForEach-Object { $_.Value } | Where-Object { $_ })
-                    }
-                }
-                $valText = if ($validValues.Count -gt 0) { " [Choices: $($validValues -join ', ')]" } else { "" }
-                $defaultVal = if ($p.DefaultValue) { " (default: $($p.DefaultValue.Extent.Text))" } else { "" }
-                $paramInfo += ("  -{0} <{1}>{2}{3}" -f $pName, $pType, $defaultVal, $valText)
-            }
-        } else {
-            $paramInfo += "  (None - runs interactively without arguments)"
-        }
-
-        Write-Host "`n------------------------------------------------------" -ForegroundColor Cyan
-        Write-Host "Selected: $($Target.Name)" -ForegroundColor Cyan
-        if ($synopsis) {
-            Write-Host "Description: $synopsis" -ForegroundColor Gray
-        }
-
-        Write-Host "`nAvailable arguments:" -ForegroundColor Yellow
-        $paramInfo | ForEach-Object { Write-Host $_ -ForegroundColor White }
-
-        if ($examples.Count -gt 0) {
-            Write-Host "`nExamples:" -ForegroundColor DarkCyan
-            $examples | Select-Object -First 4 | ForEach-Object { Write-Host "  $_" -ForegroundColor DarkGray }
-        }
-        Write-Host "------------------------------------------------------" -ForegroundColor Cyan
-    }
-    catch {
-        # Fallback cleanly if parsing fails
-    }
-}
-
 while ($true) {
     Clear-Host
     Write-Host "======================================================" -ForegroundColor Cyan
@@ -149,8 +95,7 @@ while ($true) {
                 continue
             }
             $target = $scripts[$n - 1]
-            Show-ScriptHelp $target
-            $extra = (Read-Host "`nArguments for $($target.Name) (optional, e.g. -WhatIf, Enter to skip)").Trim()
+            $extra = (Read-Host "Arguments for $($target.Name) (optional, e.g. -WhatIf, Enter to skip)").Trim()
 
             Write-Host "`n>>> Running $($target.FullName)...`n" -ForegroundColor Green
             $argList = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$($target.FullName)`"")
