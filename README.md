@@ -114,6 +114,7 @@ Every script can also be executed independently from any PowerShell console with
 | [`Hosts-Manager.ps1`](file:///Scripts/Network/Hosts-Manager.ps1) | Interactive hosts file manager: view, add, disable, or delete entries with timestamped automatic backups. | `.\Hosts-Manager.ps1` |
 | [`Network-Check.ps1`](file:///Scripts/Network/Network-Check.ps1) | Tests ping, jitter, packet loss to gateway and public DNS, DNS lookup duration, and download speed; logs to CSV. | `.\Network-Check.ps1` |
 | [`Network-Reset.ps1`](file:///Scripts/Network/Network-Reset.ps1) | Flushes DNS cache, clears ARP/NetBIOS tables, and renews DHCP IP lease. `-Full` resets Winsock and TCP/IP stack. | `.\Network-Reset.ps1 -Full` |
+| [`Set-Dns.ps1`](file:///Scripts/Network/Set-Dns.ps1) | Configures fast, secure, or ad-blocking DNS providers (Cloudflare, Google, Quad9, AdGuard, Mullvad, WARP) with optional DNS-over-HTTPS (DoH). | `.\Set-Dns.ps1 -Provider AdGuard -EnableDoH` |
 
 ### 🛡️ Security & Privacy (`Scripts/Security/`)
 | Script | Description | Example Usage |

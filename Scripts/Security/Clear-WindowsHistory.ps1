@@ -67,6 +67,7 @@ Clear-RegistryKey "$explorer\ComDlg32\LastVisitedPidlMRULegacy" 'Last visited fo
 
 # ---------- Search history ----------
 Clear-RegistryKey "$explorer\WordWheelQuery" 'File Explorer search box history'
+Clear-RegistryKey 'HKCU:\Software\Microsoft\Windows\CurrentVersion\SearchSettings' 'Search settings cache' | Out-Null
 
 # Taskbar / Start search cache (Windows 10/11)
 Clear-Folder "$env:LOCALAPPDATA\Packages\Microsoft.Windows.Search_cw5n1h2txyewy\LocalState\DeviceSearchCache" 'Taskbar search cache'
