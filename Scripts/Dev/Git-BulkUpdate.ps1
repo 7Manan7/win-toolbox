@@ -3,7 +3,7 @@
     Runs git status / fetch / pull across every repository under a folder.
     Pull uses --ff-only, so it never creates merge commits or touches diverged branches.
 .EXAMPLE
-    .\Git-BulkUpdate.ps1 -Root D:\Projects -Action pull
+    .\Git-BulkUpdate.ps1 -Root C:\Projects -Action pull
 #>
 param(
     [string]$Root,
@@ -12,8 +12,7 @@ param(
 )
 
 if (-not $Root) {
-    $defaultRoot = if (Test-Path 'D:\Projects') { 'D:\Projects' }
-                   elseif (Test-Path (Join-Path $HOME 'Projects')) { Join-Path $HOME 'Projects' }
+    $defaultRoot = if (Test-Path (Join-Path $HOME 'Projects')) { Join-Path $HOME 'Projects' }
                    elseif (Test-Path (Join-Path $HOME 'Documents\Projects')) { Join-Path $HOME 'Documents\Projects' }
                    else { (Get-Location).Path }
     $r = Read-Host "Projects root folder [$defaultRoot]"

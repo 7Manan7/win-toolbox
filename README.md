@@ -6,7 +6,7 @@
 
 An all-in-one, standalone PowerShell suite for Windows maintenance, developer workflows, gaming performance, network troubleshooting, and security auditing.
 
-Everything is completely self-contained: **clone and run**. No manual installation, system registry tweaks, or fixed path requirements (`D:\Scripts`) needed.
+Everything is completely self-contained: **clone and run**. No manual installation, system registry tweaks, or copying scripts to external directories needed. Run directly via `Script-Launcher.bat` or `launch.bat`.
 
 ---
 
@@ -126,7 +126,7 @@ Every script can also be executed independently from any PowerShell console with
 | Script | Description | Example Usage |
 |---|---|---|
 | [`Backup-Folders.ps1`](file:///Scripts/Backup/Backup-Folders.ps1) | Robust multi-threaded Robocopy backup with timestamped logs, auto-detecting backup drives and skipping build artifacts (`node_modules`, `target`, etc.). | `.\Backup-Folders.ps1` |
-| [`Find-Duplicates.ps1`](file:///Scripts/Backup/Find-Duplicates.ps1) | Fast duplicate detection using file size grouping followed by SHA-256 hash validation; generates CSV and offers Recycle Bin cleanup. | `.\Find-Duplicates.ps1 -Path D:\Data` |
+| [`Find-Duplicates.ps1`](file:///Scripts/Backup/Find-Duplicates.ps1) | Fast duplicate detection using file size grouping followed by SHA-256 hash validation; generates CSV and offers Recycle Bin cleanup. | `.\Find-Duplicates.ps1 -Path C:\Data` |
 | [`Organize-Downloads.ps1`](file:///Scripts/Backup/Organize-Downloads.ps1) | Automatically categorizes messy folders (Downloads) into subfolders (`Images`, `Documents`, `Installers`, etc.) and archives old files. | `.\Organize-Downloads.ps1 -WhatIf` |
 
 ### 📦 Utilities (`Scripts/Utilities/`)
@@ -141,7 +141,7 @@ Every script can also be executed independently from any PowerShell console with
 ## ⚙️ Configuration & Customization
 
 All scripts are pre-configured with auto-detecting defaults, but can be tailored:
-- **Backup destinations**: [`Backup-Folders.ps1`](file:///Scripts/Backup/Backup-Folders.ps1) automatically finds secondary hard drives (e.g. `D:`, `E:`), or defaults to `C:\Backups`. You can override this with the `-Destination` parameter.
+- **Backup destinations**: [`Backup-Folders.ps1`](file:///Scripts/Backup/Backup-Folders.ps1) automatically detects secondary hard drives or defaults to your system drive's `\Backups` folder. You can override this with the `-Destination` parameter.
 - **Git project root**: [`Git-BulkUpdate.ps1`](file:///Scripts/Dev/Git-BulkUpdate.ps1) automatically searches for your projects directory or prompts with your current location.
 - **App install list**: Edit the `$Apps` dictionary in [`Install-Apps.ps1`](file:///Scripts/Utilities/Install-Apps.ps1) to add your favorite tools.
 

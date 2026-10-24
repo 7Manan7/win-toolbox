@@ -3,26 +3,37 @@
     Self-elevating interactive launcher for the Windows Toolbox.
     Discovers and categorizes all .ps1 scripts in the toolbox.
 #>
+param(
+    [switch]$Elevated
+)
+
+# Determine the repository root dynamically
+$RepoRoot = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Definition }
+if (-not $RepoRoot) { $RepoRoot = (Get-Location).Path }
 
 # ---------- Self-elevate if not running as admin ----------
 $principal = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
 if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Start-Process powershell.exe -Verb RunAs -WorkingDirectory "$PSScriptRoot" -ArgumentList @(
-        '-NoProfile', '-ExecutionPolicy', 'Bypass', '-NoExit', '-File', "`"$PSCommandPath`""
-    )
-    exit
+    try {
+        Start-Process powershell.exe -Verb RunAs -WorkingDirectory "$RepoRoot" -ArgumentList @(
+            '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$PSCommandPath`"", '-Elevated'
+        )
+        exit 0
+    }
+    catch {
+        Write-Host "`nAdministrator privileges are required to run the Windows Toolbox." -ForegroundColor Red
+        Write-Host "Elevation request was cancelled or denied." -ForegroundColor Yellow
+        Read-Host "`nPress Enter to exit"
+        exit 1
+    }
 }
 
-$Host.UI.RawUI.WindowTitle = 'Windows Toolbox Launcher (Admin)'
+try { $Host.UI.RawUI.WindowTitle = 'Windows Toolbox Launcher (Admin)' } catch { }
 
 # Locate scripts folder dynamically relative to repo root
-$ScriptsFolder = Join-Path $PSScriptRoot 'Scripts'
+$ScriptsFolder = Join-Path $RepoRoot 'Scripts'
 if (-not (Test-Path $ScriptsFolder)) {
-    if (Test-Path 'D:\Scripts') {
-        $ScriptsFolder = 'D:\Scripts'
-    } else {
-        $ScriptsFolder = $PSScriptRoot
-    }
+    $ScriptsFolder = $RepoRoot
 }
 
 function Get-ToolboxScripts {
@@ -71,7 +82,10 @@ while ($true) {
     $choice = (Read-Host "Enter script number to run").Trim()
 
     switch -Regex ($choice) {
-        '^[Qq]$' { return }
+        '^[Qq]$' {
+            if ($Elevated) { exit 0 }
+            return
+        }
         '^[Rr]$' { continue }
         '^\d+$' {
             $n = [int]$choice
@@ -88,7 +102,9 @@ while ($true) {
             if ($extra) {
                 $parsedArgs = [System.Management.Automation.PSParser]::Tokenize($extra, [ref]$null) |
                     Where-Object { $_.Type -in 'CommandArgument', 'CommandParameter', 'String', 'Number' } |
-                    ForEach-Object { $_.Content }
+                    ForEach-Object {
+                        if ($_.Content -match '\s') { "`"$($_.Content)`"" } else { $_.Content }
+                    }
                 if ($parsedArgs) {
                     $argList += $parsedArgs
                 } else {

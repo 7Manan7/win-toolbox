@@ -25,11 +25,11 @@ Write-Host "$($files.Count) files scanned, $($candidates.Count) need hashing."
 $i = 0
 $hashed = foreach ($f in $candidates) {
     $i++
-    Write-Progress -Activity 'Hashing files' -Status $f.Name -PercentComplete (100 * $i / [math]::Max(1, $candidates.Count))
+    try { Write-Progress -Activity 'Hashing files' -Status $f.Name -PercentComplete (100 * $i / [math]::Max(1, $candidates.Count)) } catch { }
     try { [pscustomobject]@{ Hash = (Get-FileHash -LiteralPath $f.FullName -Algorithm SHA256 -ErrorAction Stop).Hash; File = $f } }
     catch { }
 }
-Write-Progress -Activity 'Hashing files' -Completed
+try { Write-Progress -Activity 'Hashing files' -Completed } catch { }
 
 $groups = @($hashed | Group-Object Hash | Where-Object Count -gt 1)
 if ($groups.Count -eq 0) { Write-Host "`nNo duplicates found." -ForegroundColor Green; return }

@@ -24,7 +24,7 @@ $DefaultDestination = Join-Path $backupDrive 'Backups'
 
 $suggestedSources = @(
     (Join-Path $HOME 'Projects'),
-    'D:\Projects',
+    (Join-Path $HOME 'Documents\Projects'),
     [Environment]::GetFolderPath('MyDocuments'),
     [Environment]::GetFolderPath('Desktop')
 ) | Where-Object { $_ -and (Test-Path $_) } | Select-Object -Unique

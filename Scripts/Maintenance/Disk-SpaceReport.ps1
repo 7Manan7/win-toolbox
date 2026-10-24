@@ -12,13 +12,14 @@ param(
 )
 
 if (-not $Path) {
-    $Path = Read-Host 'Path to analyze [C:\]'
-    if (-not $Path) { $Path = 'C:\' }
+    $defaultPath = if ($env:SystemDrive) { "$($env:SystemDrive)\" } else { 'C:\' }
+    $p = Read-Host "Path to analyze [$defaultPath]"
+    $Path = if ($p) { $p } else { $defaultPath }
 }
 if (-not (Test-Path $Path)) { Write-Host "Path not found: $Path" -ForegroundColor Red; return }
 
 Write-Host "`n--- Drives ---" -ForegroundColor Cyan
-Get-CimInstance Win32_LogicalDisk -Filter 'DriveType=3' | ForEach-Object {
+Get-CimInstance Win32_LogicalDisk -Filter 'DriveType=3' -ErrorAction SilentlyContinue | ForEach-Object {
     [pscustomobject]@{
         Drive     = $_.DeviceID
         'Size GB' = [math]::Round($_.Size / 1GB, 1)
@@ -33,12 +34,12 @@ $dirs = @(Get-ChildItem $Path -Force -Directory -ErrorAction SilentlyContinue |
 $i = 0
 $rows = foreach ($d in $dirs) {
     $i++
-    Write-Progress -Activity 'Measuring folders' -Status $d.Name -PercentComplete (100 * $i / [math]::Max(1, $dirs.Count))
+    try { Write-Progress -Activity 'Measuring folders' -Status $d.Name -PercentComplete (100 * $i / [math]::Max(1, $dirs.Count)) } catch { }
     $sum = (Get-ChildItem $d.FullName -Recurse -Force -File -ErrorAction SilentlyContinue |
             Measure-Object Length -Sum).Sum
     [pscustomobject]@{ 'Size GB' = [math]::Round($sum / 1GB, 2); Folder = $d.FullName }
 }
-Write-Progress -Activity 'Measuring folders' -Completed
+try { Write-Progress -Activity 'Measuring folders' -Completed } catch { }
 $rows | Sort-Object 'Size GB' -Descending | Select-Object -First $Top | Format-Table -AutoSize
 
 if (-not $SkipFiles) {
