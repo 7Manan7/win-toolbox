@@ -1,0 +1,32 @@
+# Windows OS files
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Script output and generated logs
+*.log
+_logs/
+logs/
+*.bak
+*.tmp
+
+# Generated reports from scripts
+*.csv
+NetworkLog.csv
+HardwareLog_*.csv
+Duplicates_*.csv
+OpenPorts_*.csv
+EnvBackup_*/
+HealthCheck_*.log
+
+# User-specific local overrides
+config.user.ps1
+config.local.json
+*.local.ps1
+
+# IDE and editor files
+.vscode/
+.idea/
+*.suo
+*.user
