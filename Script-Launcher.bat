@@ -11,5 +11,16 @@ if errorlevel 1 (
     )
 )
 
+if /i "%~1"=="-gui" goto run_gui
+if /i "%~1"=="--gui" goto run_gui
+if /i "%~1"=="/gui" goto run_gui
+
 "%PS_BIN%" -NoProfile -ExecutionPolicy Bypass -File "%~dp0Script-Launcher.ps1" %*
+goto end
+
+:run_gui
+shift
+"%PS_BIN%" -NoProfile -ExecutionPolicy Bypass -STA -File "%~dp0Toolbox-GUI.ps1" %*
+
+:end
 endlocal

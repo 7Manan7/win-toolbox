@@ -18,18 +18,27 @@ git clone https://github.com/7Manan7/win-toolbox.git
 cd win-toolbox
 ```
 
-### 2. Launch the Interactive Menu
-Double-click `launch.bat` (or `Script-Launcher.bat`), or run from your terminal:
+### 2. Launch the Control Center
+
+#### 🎨 Graphical User Interface (GUI)
+Double-click `launch-gui.bat` or run:
 ```powershell
-.\launch.bat
+.\launch-gui.bat
 ```
 *Or directly via PowerShell:*
 ```powershell
-.\launch.ps1
+.\launch-gui.ps1
 ```
 
+#### 🖥️ Interactive CLI Menu
+Double-click `launch.bat` (or `Script-Launcher.bat`), or run:
+```powershell
+.\launch.bat
+```
+*(Press `[G]` in the CLI menu at any time to switch to the GUI).*
+
 > [!NOTE]
-> The launcher will automatically prompt for Administrator privileges (UAC) if not already elevated, then display a categorized menu of all available tools.
+> The launchers automatically detect Administrator status and prompt for elevation (UAC) if needed.
 
 ---
 
@@ -37,16 +46,19 @@ Double-click `launch.bat` (or `Script-Launcher.bat`), or run from your terminal:
 
 ```
 win-toolbox/
-├── launch.bat                  # Instant double-click launcher
+├── launch-gui.bat              # Instant double-click GUI launcher
+├── launch-gui.ps1              # PowerShell GUI launcher shortcut
+├── Toolbox-GUI.ps1             # Modern WPF Graphical Control Center (100% standalone)
+├── launch.bat                  # Instant double-click CLI launcher (pass -gui for GUI)
 ├── launch.ps1                  # PowerShell CLI launcher shortcut
 ├── Script-Launcher.bat         # Direct batch launcher wrapper
-├── Script-Launcher.ps1         # Self-elevating, interactive categorized menu
+├── Script-Launcher.ps1         # Self-elevating, interactive categorized CLI menu
 ├── Scripts/
 │   ├── Backup/                 # Backup, file organization, duplicate detection
 │   ├── Dev/                    # Ports, JDK switching, build caches, services, Git
 │   ├── Gaming/                 # Power profiles, game mode, hardware logging, shaders
 │   ├── Maintenance/            # Health checks, disk usage, temp cleanup, updates
-│   ├── Network/                # Hosts editor, speed/latency diagnostics, stack reset
+│   ├── Network/                # Hosts editor, DNS presets (DoH/WARP), diagnostics
 │   ├── Security/               # Open ports audit, Defender scans, privacy/history cleanup
 │   └── Utilities/              # Winget installer/updater, environment backups
 ├── .gitignore

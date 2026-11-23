@@ -39,7 +39,7 @@ if (-not (Test-Path $ScriptsFolder)) {
 function Get-ToolboxScripts {
     if (-not (Test-Path $ScriptsFolder)) { return @() }
     @(Get-ChildItem -Path $ScriptsFolder -Filter *.ps1 -File -Recurse |
-        Where-Object { $_.FullName -ne $PSCommandPath -and $_.Name -notmatch '^(launch|Script-Launcher)\.ps1$' } |
+        Where-Object { $_.FullName -ne $PSCommandPath -and $_.Name -notmatch '^(launch|launch-gui|Script-Launcher|Toolbox-GUI)\.ps1$' } |
         Sort-Object FullName)
 }
 
@@ -78,7 +78,7 @@ while ($true) {
     }
 
     Write-Host "`n------------------------------------------------------" -ForegroundColor DarkGray
-    Write-Host "[R] Refresh   [Q] Quit" -ForegroundColor DarkGray
+    Write-Host "[G] GUI Mode   [R] Refresh   [Q] Quit" -ForegroundColor DarkGray
     $choice = (Read-Host "Enter script number to run").Trim()
 
     switch -Regex ($choice) {
@@ -87,6 +87,17 @@ while ($true) {
             return
         }
         '^[Rr]$' { continue }
+        '^[Gg]$' {
+            $guiScript = Join-Path $RepoRoot 'Toolbox-GUI.ps1'
+            if (Test-Path $guiScript) {
+                Write-Host "`nLaunching GUI..." -ForegroundColor Cyan
+                Start-Process powershell.exe -WorkingDirectory "$RepoRoot" -ArgumentList @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-STA', '-File', "`"$guiScript`"")
+            } else {
+                Write-Host "Toolbox-GUI.ps1 not found." -ForegroundColor Red
+                Start-Sleep -Seconds 1
+            }
+            continue
+        }
         '^\d+$' {
             $n = [int]$choice
             if ($n -lt 1 -or $n -gt $scripts.Count) {
