@@ -67,8 +67,8 @@ function Get-AllToolboxMetadata {
             $examples = @($Matches[1] -split '\r?\n' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
         }
 
-        $rel = $file.FullName.Substring($scriptsDir.Length).TrimStart('\')
-        $parts = $rel -split '\\'
+        $rel = $file.FullName.Substring($scriptsDir.Length).TrimStart('\', '/')
+        $parts = $rel -split '[\\/]'
         $category = if ($parts.Length -gt 1) { $parts[0] } else { 'General' }
         $color = if ($CategoryColors.ContainsKey($category)) { $CategoryColors[$category] } else { '#71717A' }
 
@@ -196,7 +196,7 @@ $xaml = @"
 
                 <!-- App Title -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="⚡" FontSize="22" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="&#x26A1;" FontSize="22" Margin="0,0,10,0" VerticalAlignment="Center"/>
                     <StackPanel>
                         <TextBlock Text="Windows Toolbox" FontSize="18" FontWeight="Bold" Foreground="#FFFFFF"/>
                         <TextBlock Text="PowerShell Automation &amp; System Suite" FontSize="11" Foreground="#A1A1AA"/>
@@ -211,11 +211,11 @@ $xaml = @"
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="🔍" FontSize="13" Foreground="#A1A1AA" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="0" Text="&#x1F50D;" FontSize="13" Foreground="#A1A1AA" Margin="0,0,8,0" VerticalAlignment="Center"/>
                         <TextBox Name="TxtSearch" Grid.Column="1" Background="Transparent" BorderThickness="0"
                                  Foreground="#FFFFFF" FontSize="13" VerticalAlignment="Center"
                                  ToolTip="Filter scripts by name, category, or description..."/>
-                        <Button Name="BtnClearSearch" Grid.Column="2" Content="✕" Background="Transparent"
+                        <Button Name="BtnClearSearch" Grid.Column="2" Content="&#x2715;" Background="Transparent"
                                 BorderThickness="0" Foreground="#A1A1AA" Cursor="Hand" Padding="4,0" ToolTip="Clear search"/>
                     </Grid>
                 </Border>
@@ -223,10 +223,10 @@ $xaml = @"
                 <!-- Status Badges &amp; Quick Links -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <Border Name="BadgeAdmin" Background="#064E3B" CornerRadius="12" Padding="10,4" Margin="0,0,10,0">
-                        <TextBlock Name="TxtAdminStatus" Text="🛡️ Administrator" FontSize="12" FontWeight="SemiBold" Foreground="#34D399"/>
+                        <TextBlock Name="TxtAdminStatus" Text="&#x1F6E1; Administrator" FontSize="12" FontWeight="SemiBold" Foreground="#34D399"/>
                     </Border>
-                    <Button Name="BtnRefresh" Content="🔄 Refresh" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
-                    <Button Name="BtnTerminalMenu" Content="🖥️ CLI Launcher" Style="{StaticResource SecondaryButton}"/>
+                    <Button Name="BtnRefresh" Content="&#x1F504; Refresh" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
+                    <Button Name="BtnTerminalMenu" Content="&#x1F5A5; CLI Launcher" Style="{StaticResource SecondaryButton}"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -240,11 +240,11 @@ $xaml = @"
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="⚠️" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="&#x26A0;" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
                     <TextBlock Text="Running as Standard User. Tools like Defender, Windows Update, Health Check and Hosts require elevation."
                                FontSize="12" Foreground="#FEF3C7" VerticalAlignment="Center"/>
                 </StackPanel>
-                <Button Name="BtnElevateNow" Grid.Column="1" Content="🛡️ Relaunch as Admin"
+                <Button Name="BtnElevateNow" Grid.Column="1" Content="&#x1F6E1; Relaunch as Admin"
                         Background="#D97706" Foreground="#FFFFFF" FontWeight="SemiBold"
                         Style="{StaticResource RoundedButton}" Padding="12,5"/>
             </Grid>
@@ -356,10 +356,10 @@ $xaml = @"
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Button Name="BtnRunTerminal" Grid.Column="0" Content="▶ Run in Terminal"
+                                <Button Name="BtnRunTerminal" Grid.Column="0" Content="&#x25B6; Run in Terminal"
                                         Style="{StaticResource PrimaryButton}" Margin="0,0,6,0"
                                         ToolTip="Recommended for scripts with interactive prompts (runs in admin PowerShell window)"/>
-                                <Button Name="BtnRunDirect" Grid.Column="1" Content="⚡ Run Direct"
+                                <Button Name="BtnRunDirect" Grid.Column="1" Content="&#x26A1; Run Direct"
                                         Style="{StaticResource SuccessButton}" Margin="6,0,0,0"
                                         ToolTip="Runs in background and streams output into the console below"/>
                             </Grid>
@@ -377,7 +377,7 @@ $xaml = @"
                             <Grid Grid.Row="0" Margin="0,0,0,6">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <TextBlock Text="CONSOLE LOG" FontSize="11" FontWeight="Bold" Foreground="#71717A"/>
-                                    <TextBlock Name="TxtConsoleStatus" Text=" • Ready" FontSize="11" Foreground="#34D399" Margin="6,0,0,0"/>
+                                    <TextBlock Name="TxtConsoleStatus" Text=" &#x2022; Ready" FontSize="11" Foreground="#34D399" Margin="6,0,0,0"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                     <Button Name="BtnClearConsole" Content="Clear" Style="{StaticResource SecondaryButton}" Padding="8,2" FontSize="10" Margin="0,0,6,0"/>
@@ -398,7 +398,7 @@ $xaml = @"
         <!-- [ STATUS BAR ] -->
         <Border Grid.Row="3" Background="#18181B" BorderBrush="#27272A" BorderThickness="0,1,0,0" Padding="16,6">
             <Grid>
-                <TextBlock Name="TxtFooterStatus" Text="Windows Toolbox Control Center • Standalone &amp; Ready"
+                <TextBlock Name="TxtFooterStatus" Text="Windows Toolbox Control Center &#x2022; Standalone &amp; Ready"
                            FontSize="11" Foreground="#71717A" VerticalAlignment="Center"/>
                 <TextBlock Text="v2.1" HorizontalAlignment="Right" FontSize="11" Foreground="#71717A" VerticalAlignment="Center"/>
             </Grid>
@@ -445,17 +445,18 @@ $TxtFooterStatus   = $Window.FindName('TxtFooterStatus')
 $Global:AllScripts = [System.Collections.Generic.List[PSCustomObject]]::new()
 $Global:SelectedScript = $null
 $Global:ActiveCategory = 'All'
+$Global:CategoryButtons = [System.Collections.Generic.List[System.Windows.Controls.Button]]::new()
 $Global:ParamControls = @{}
 $Global:IsProcessRunning = $false
 
 # ----------------- Setup Admin Status & System Info -----------------
 if ($isAdmin) {
-    $TxtAdminStatus.Text = "🛡️ Administrator"
+    $TxtAdminStatus.Text = "$([char]::ConvertFromUtf32(0x1F6E1)) Administrator"
     $BadgeAdmin.Background = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#064E3B")
     $TxtAdminStatus.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#34D399")
     $BannerElevate.Visibility = [System.Windows.Visibility]::Collapsed
 } else {
-    $TxtAdminStatus.Text = "⚠️ Standard User"
+    $TxtAdminStatus.Text = "$([char]::ConvertFromUtf32(0x26A0)) Standard User"
     $BadgeAdmin.Background = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#78350F")
     $TxtAdminStatus.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#FDE68A")
     $BannerElevate.Visibility = [System.Windows.Visibility]::Visible
@@ -491,7 +492,7 @@ function Update-CommandPreview {
         return
     }
 
-    $cmd = ".\$($Global:SelectedScript.File.FullName.Substring($RepoRoot.Length).TrimStart('\'))"
+    $cmd = ".\$($Global:SelectedScript.File.FullName.Substring($RepoRoot.Length).TrimStart('\', '/'))"
     $argsList = @()
 
     foreach ($key in $Global:ParamControls.Keys) {
@@ -524,13 +525,15 @@ function Update-CommandPreview {
 
 # ----------------- Select Script Handler -----------------
 function Select-Script($scriptItem) {
+    if (-not $scriptItem) { return }
     $Global:SelectedScript = $scriptItem
     $Global:ParamControls.Clear()
 
     $TxtDetailName.Text = $scriptItem.Name
-    $TxtDetailCat.Text = $scriptItem.Category.ToUpper()
-    $BadgeDetailCat.Background = [System.Windows.Media.BrushConverter]::new().ConvertFromString($scriptItem.Color)
-    $TxtDetailPath.Text = $scriptItem.File.FullName.Substring($RepoRoot.Length).TrimStart('\')
+    $TxtDetailCat.Text = if ($scriptItem.Category) { $scriptItem.Category.ToUpper() } else { "GENERAL" }
+    $catColor = if ($scriptItem.Color) { $scriptItem.Color } else { "#71717A" }
+    $BadgeDetailCat.Background = [System.Windows.Media.BrushConverter]::new().ConvertFromString($catColor)
+    $TxtDetailPath.Text = if ($scriptItem.File) { $scriptItem.File.FullName.Substring($RepoRoot.Length).TrimStart('\', '/') } else { "" }
     $TxtDetailDesc.Text = $scriptItem.Synopsis
 
     $PnlDynamicParams.Children.Clear()
@@ -634,12 +637,25 @@ function Select-Script($scriptItem) {
 function Render-ScriptCards {
     $PnlScriptCards.Children.Clear()
 
-    $query = $TxtSearch.Text.Trim().ToLower()
-    $filtered = $Global:AllScripts | Where-Object {
-        $catMatch = ($Global:ActiveCategory -eq 'All' -or $_.Category -eq $Global:ActiveCategory)
-        $searchMatch = (-not $query -or $_.Name.ToLower().Contains($query) -or $_.Synopsis.ToLower().Contains($query) -or $_.Category.ToLower().Contains($query))
-        $catMatch -and $searchMatch
+    $query = ""
+    if ($TxtSearch -and $TxtSearch.Text) {
+        $query = $TxtSearch.Text.Trim().ToLower()
     }
+
+    $activeCat = $Global:ActiveCategory
+    if (-not $activeCat) { $activeCat = 'All' }
+
+    $filtered = @($Global:AllScripts | Where-Object {
+        $catMatch = ($activeCat -eq 'All' -or $_.Category -ieq $activeCat)
+        $searchMatch = $true
+        if ($query) {
+            $nameHas = ($_.Name -and $_.Name.ToLower().Contains($query))
+            $synHas  = ($_.Synopsis -and $_.Synopsis.ToLower().Contains($query))
+            $catHas  = ($_.Category -and $_.Category.ToLower().Contains($query))
+            $searchMatch = ($nameHas -or $synHas -or $catHas)
+        }
+        $catMatch -and $searchMatch
+    })
 
     $TxtScriptCount.Text = " ($($filtered.Count) tools)"
 
@@ -647,7 +663,7 @@ function Render-ScriptCards {
         $emptyBorder = [System.Windows.Controls.Border]::new()
         $emptyBorder.Padding = [System.Windows.Thickness]::new(30)
         $emptyText = [System.Windows.Controls.TextBlock]::new()
-        $emptyText.Text = "No scripts matched your search query."
+        $emptyText.Text = "No scripts found in '$activeCat' category."
         $emptyText.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#71717A")
         $emptyText.FontSize = 14
         $emptyText.HorizontalAlignment = [System.Windows.HorizontalAlignment]::Center
@@ -678,10 +694,10 @@ function Render-ScriptCards {
 
         # Row 0: Name + Category badge + Quick launch
         $topRow = [System.Windows.Controls.Grid]::new()
-        $topRow.ColumnDefinitions.Add([System.Windows.Controls.ColumnDefinition]::new()) | Out-Null # Title
+        $topRow.ColumnDefinitions.Add([System.Windows.Controls.ColumnDefinition]::new()) | Out-Null
         $colAuto = [System.Windows.Controls.ColumnDefinition]::new()
         $colAuto.Width = [System.Windows.GridLength]::Auto
-        $topRow.ColumnDefinitions.Add($colAuto) | Out-Null # Badge & Quick launch
+        $topRow.ColumnDefinitions.Add($colAuto) | Out-Null
 
         $titleStack = [System.Windows.Controls.StackPanel]::new()
         $titleStack.Orientation = [System.Windows.Controls.Orientation]::Horizontal
@@ -713,15 +729,15 @@ function Render-ScriptCards {
 
         # Quick Run Button
         $btnQuick = [System.Windows.Controls.Button]::new()
-        $btnQuick.Content = "▶ Run"
+        $btnQuick.Content = "$([char]0x25B6) Run"
         $btnQuick.FontSize = 11
         $btnQuick.Style = $Window.FindResource('SecondaryButton')
         $btnQuick.Padding = [System.Windows.Thickness]::new(8, 2, 8, 2)
-        $targetScript = $item
+        $btnQuick.Tag = $item
         $btnQuick.Add_Click({
             param($s, $e)
             $e.Handled = $true
-            Select-Script $targetScript
+            Select-Script $s.Tag
             Invoke-ToolboxScript -Direct
         })
         $rightStack.Children.Add($btnQuick) | Out-Null
@@ -745,9 +761,10 @@ function Render-ScriptCards {
         $card.Child = $grid
 
         # Card Click selects the script
-        $clickedItem = $item
+        $card.Tag = $item
         $card.Add_MouseLeftButtonUp({
-            Select-Script $clickedItem
+            param($s, $e)
+            Select-Script $s.Tag
             Render-ScriptCards
         })
 
@@ -755,31 +772,52 @@ function Render-ScriptCards {
     }
 }
 
-# ----------------- Render Category Sidebar Buttons -----------------
-function Render-Categories {
+# ----------------- Category Selection Handler -----------------
+function Set-ActiveCategory([string]$catName) {
+    $Global:ActiveCategory = $catName
+    $TxtActiveCategory.Text = if ($catName -eq 'All') { "All Tools" } else { "$catName Tools" }
+
+    # Update button highlights smoothly without recreating them
+    foreach ($btn in $Global:CategoryButtons) {
+        if ($btn.Tag -eq $catName) {
+            $btn.Background = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#0078D4")
+            $btn.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#FFFFFF")
+        } else {
+            $btn.Background = [System.Windows.Media.BrushConverter]::new().ConvertFromString("Transparent")
+            $btn.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#D4D4D8")
+        }
+    }
+
+    Render-ScriptCards
+}
+
+# ----------------- Build Category Sidebar Buttons -----------------
+function Build-CategoryButtons {
     $PnlCategoryList.Children.Clear()
+    $Global:CategoryButtons.Clear()
 
     $categories = @('All') + @($Global:AllScripts | Select-Object -ExpandProperty Category -Unique | Sort-Object)
 
     foreach ($cat in $categories) {
         $btn = [System.Windows.Controls.Button]::new()
+        $btn.Tag = $cat
         $btn.Margin = [System.Windows.Thickness]::new(0, 0, 0, 4)
         $btn.Cursor = [System.Windows.Input.Cursors]::Hand
         $btn.BorderThickness = [System.Windows.Thickness]::new(0)
         $btn.Padding = [System.Windows.Thickness]::new(10, 8, 10, 8)
 
-        $count = if ($cat -eq 'All') { $Global:AllScripts.Count } else { ($Global:AllScripts | Where-Object { $_.Category -eq $cat }).Count }
+        $count = if ($cat -eq 'All') { $Global:AllScripts.Count } else { ($Global:AllScripts | Where-Object { $_.Category -ieq $cat }).Count }
 
         $icon = switch ($cat) {
-            'All'         { '📁' }
-            'Backup'      { '💾' }
-            'Dev'         { '💻' }
-            'Gaming'      { '🎮' }
-            'Maintenance' { '🔧' }
-            'Network'     { '🌐' }
-            'Security'    { '🛡️' }
-            'Utilities'   { '📦' }
-            default       { '📄' }
+            'All'         { [char]::ConvertFromUtf32(0x1F4C1) }
+            'Backup'      { [char]::ConvertFromUtf32(0x1F4BE) }
+            'Dev'         { [char]::ConvertFromUtf32(0x1F4BB) }
+            'Gaming'      { [char]::ConvertFromUtf32(0x1F3AE) }
+            'Maintenance' { [char]::ConvertFromUtf32(0x1F527) }
+            'Network'     { [char]::ConvertFromUtf32(0x1F310) }
+            'Security'    { [char]::ConvertFromUtf32(0x1F6E1) }
+            'Utilities'   { [char]::ConvertFromUtf32(0x1F4E6) }
+            default       { [char]::ConvertFromUtf32(0x1F4C4) }
         }
 
         # Styling depending on active state
@@ -821,14 +859,12 @@ function Render-Categories {
 
         $btn.Content = $grid
 
-        $currentCat = $cat
         $btn.Add_Click({
-            $Global:ActiveCategory = $currentCat
-            $TxtActiveCategory.Text = if ($currentCat -eq 'All') { "All Tools" } else { "$currentCat Tools" }
-            Render-Categories
-            Render-ScriptCards
+            param($sender, $e)
+            Set-ActiveCategory $sender.Tag
         })
 
+        $Global:CategoryButtons.Add($btn)
         $PnlCategoryList.Children.Add($btn) | Out-Null
     }
 }
@@ -874,7 +910,7 @@ function Invoke-ToolboxScript([switch]$Direct) {
 
         $Global:IsProcessRunning = $true
         $BtnRunDirect.IsEnabled = $false
-        $TxtConsoleStatus.Text = " • Running: $($Global:SelectedScript.Name)..."
+        $TxtConsoleStatus.Text = " $([char]0x2022) Running: $($Global:SelectedScript.Name)..."
         $TxtConsoleStatus.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#38BDF8")
         $TxtConsoleLog.Text = "[$(Get-Date -Format 'HH:mm:ss')] Starting $($Global:SelectedScript.Name)...`r`n"
         $TxtConsoleLog.AppendText("Command: $($TxtCommandPreview.Text)`r`n`r`n")
@@ -932,10 +968,10 @@ function Invoke-ToolboxScript([switch]$Direct) {
             $Global:IsProcessRunning = $false
             $BtnRunDirect.IsEnabled = $true
             if ($code -eq 0) {
-                $TxtConsoleStatus.Text = " • Completed Successfully (Exit 0)"
+                $TxtConsoleStatus.Text = " $([char]0x2022) Completed Successfully (Exit 0)"
                 $TxtConsoleStatus.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#34D399")
             } else {
-                $TxtConsoleStatus.Text = " • Finished (Exit Code: $code)"
+                $TxtConsoleStatus.Text = " $([char]0x2022) Finished (Exit Code: $code)"
                 $TxtConsoleStatus.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#F87171")
             }
             $TxtConsoleLog.AppendText("`r`n[$(Get-Date -Format 'HH:mm:ss')] Process finished with exit code $code.`r`n")
@@ -954,7 +990,7 @@ function Invoke-ToolboxScript([switch]$Direct) {
         try {
             Start-Process powershell.exe -WorkingDirectory (Split-Path $targetFile -Parent) `
                 -ArgumentList $argStringList -Verb RunAs
-            $TxtConsoleStatus.Text = " • Launched in Terminal window"
+            $TxtConsoleStatus.Text = " $([char]0x2022) Launched in Terminal window"
             $TxtConsoleStatus.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#38BDF8")
             $TxtConsoleLog.AppendText("[$(Get-Date -Format 'HH:mm:ss')] Launched $($Global:SelectedScript.Name) in external terminal window.`r`n")
             $TxtConsoleLog.ScrollToEnd()
@@ -980,7 +1016,7 @@ $BtnClearSearch.Add_Click({
 # ----------------- Refresh & Utility Handlers -----------------
 function Load-AllData {
     $Global:AllScripts = Get-AllToolboxMetadata
-    Render-Categories
+    Build-CategoryButtons
     Render-ScriptCards
 
     if ($Global:AllScripts.Count -gt 0 -and -not $Global:SelectedScript) {
@@ -1005,13 +1041,13 @@ $BtnTerminalMenu.Add_Click({
 
 $BtnClearConsole.Add_Click({
     $TxtConsoleLog.Text = ""
-    $TxtConsoleStatus.Text = " • Log cleared"
+    $TxtConsoleStatus.Text = " $([char]0x2022) Log cleared"
 })
 
 $BtnCopyConsole.Add_Click({
     if ($TxtConsoleLog.Text) {
         [System.Windows.Clipboard]::SetText($TxtConsoleLog.Text)
-        $TxtConsoleStatus.Text = " • Copied to clipboard"
+        $TxtConsoleStatus.Text = " $([char]0x2022) Copied to clipboard"
     }
 })
 
